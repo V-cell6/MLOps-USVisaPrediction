@@ -1,5 +1,3 @@
-# MLOps-USVisaPrediction
-
 # MLOps for US Visa Prediction
 
 ## Overview
