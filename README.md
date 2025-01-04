@@ -44,31 +44,65 @@ The project structure is organized into three main sections:
 ### 3. **Deployable Code**
    The deployable code is structured into modular components:
    - **components:**
-     - `data_ingestion.py`
-     - `data_validation.py`
-     - `data_transformation.py`
-     - `model_trainer.py`
-     - `model_evaluation.py`
-     - `model_pusher.py`
+     - `data_ingestion.py`: Handles data collection and loading.
+     - `data_validation.py`: Ensures data quality and consistency.
+     - `data_transformation.py`: Performs feature engineering and data preparation.
+     - `model_trainer.py`: Trains machine learning models.
+     - `model_evaluation.py`: Evaluates model performance and metrics.
+     - `model_pusher.py`: Deploys the trained model to production.
    - **configuration:** Configuration settings.
    - **constant:** Project constants.
    - **entity:**
-     - `config_entity.py`
-     - `artifact_entity.py`
+     - `config_entity.py`: Defines configuration entities.
+     - `artifact_entity.py`: Handles artifact management.
    - **logger:** Logging functionality.
    - **pipeline:**
-     - `training_pipeline.py`
-     - `prediction_pipeline.py`
+     - `training_pipeline.py`: Orchestrates the training process.
+     - `prediction_pipeline.py`: Handles predictions on new data.
    - **utils:** Utility functions for common tasks.
 
-## Technologies Used
-- **Python**: Core programming language.
-- **MongoDB**: Data storage.
-- **Docker**: Containerization.
-- **Jupyter Notebooks**: Data exploration and analysis.
-- **VS Code**: Development environment.
-- **GitHub**: Version control.
-- **Machine Learning Libraries:** Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn.
+## AWS Deployment
+The project supports deployment on AWS using GitHub Actions for CI/CD. Below are the key steps:
+
+### AWS-CICD-Deployment-with-Github-Actions
+1. **Login to AWS Console.**
+2. **Create an IAM User for Deployment** with specific access:
+   - **EC2 Access:** Virtual machine for hosting.
+   - **ECR:** Elastic Container Registry to save your Docker image in AWS.
+
+### Deployment Description
+1. Build a Docker image of the source code.
+2. Push the Docker image to ECR.
+3. Launch an EC2 instance.
+4. Pull the image from ECR in the EC2 instance.
+5. Launch the Docker image in EC2.
+
+### Policies for IAM User:
+1. `AmazonEC2ContainerRegistryFullAccess`
+2. `AmazonEC2FullAccess`
+
+### Deployment Steps
+1. **Create ECR Repository:**
+   - Save the URI: `315865595366.dkr.ecr.us-east-1.amazonaws.com/visarepo`
+2. **Create EC2 Instance:**
+   - Use Ubuntu as the operating system.
+3. **Install Docker on EC2 Instance:**
+   ```bash
+   sudo apt-get update -y
+   sudo apt-get upgrade
+   curl -fsSL https://get.docker.com -o get-docker.sh
+   sudo sh get-docker.sh
+   sudo usermod -aG docker ubuntu
+   newgrp docker
+   ```
+4. **Configure EC2 as Self-Hosted Runner:**
+   - Go to GitHub: `Settings > Actions > Runner > New Self-Hosted Runner`
+   - Choose OS and run the commands provided by GitHub.
+5. **Set Up GitHub Secrets:**
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_DEFAULT_REGION`
+   - `ECR_REPO`
 
 ## Installation
 1. Clone the repository:
@@ -96,3 +130,6 @@ The project structure is organized into three main sections:
 - Implement continuous integration/continuous deployment (CI/CD) pipelines.
 - Enhance model performance through hyperparameter tuning.
 - Deploy the model using cloud services like AWS or Azure.
+
+## License
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
